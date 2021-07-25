@@ -5,7 +5,6 @@ echo "Backup the Target drive."
 
 echo "Create a 6GB NTFS partition on the hard drive and extract the Windows ISO to it."
 # tMake room for Windows partition.
-sudo -s
 systemctl stop httpd
 systemctl stop nfs-server
 umount -a
