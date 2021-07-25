@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Install Windows 10"
-echo "This step by step has been created from information provided by the OP, @Marcel Alexandru.
+echo "This step by step has been created from information provided by the OP, @Marcel Alexandru."
 echo "Backup the Target drive."
 echo "Create a 6GB NTFS partition on the hard drive and extract the Windows ISO to it."
 echo "Create a 20GB, or larger, NTFS partition on the hard drive for the Windows Installation."
