@@ -5,20 +5,21 @@ echo "Backup the Target drive."
 
 echo "Create a 6GB NTFS partition on the hard drive and extract the Windows ISO to it."
 # tMake room for Windows partition.
-sudo systemctl stop httpd
-sudo systemctl stop nfs-server
-sudo umount -a
-sudo mkdir /tmp/tmproot
-sudo mount -t tmpfs none /tmp/tmproot
-sudo mkdir /tmp/tmproot/{proc,sys,dev,run,usr,var,tmp,oldroot}
-sudo cp -ax /{bin,etc,mnt,sbin,lib,lib64} /tmp/tmproot/
-sudo cp -ax /usr/{bin,sbin,lib,lib64} /tmp/tmproot/usr/
-sudo cp -ax /var/{account,empty,lib,local,lock,nis,opt,preserve,run,spool,tmp,yp} /tmp/tmproot/var/
-sudo mount --make-rprivate / # necessary for pivot_root to work
-sudo pivot_root /tmp/tmproot /tmp/tmproot/oldroot
-for i in dev proc sys run; do sudo mount --move /oldroot/$i /$i; done
-sudo systemctl restart sshd
-sudo systemctl status sshd
+sudo -s
+systemctl stop httpd
+systemctl stop nfs-server
+umount -a
+mkdir /tmp/tmproot
+mount -t tmpfs none /tmp/tmproot
+mkdir /tmp/tmproot/{proc,sys,dev,run,usr,var,tmp,oldroot}
+cp -ax /{bin,etc,mnt,sbin,lib,lib64} /tmp/tmproot/
+cp -ax /usr/{bin,sbin,lib,lib64} /tmp/tmproot/usr/
+cp -ax /var/{account,empty,lib,local,lock,nis,opt,preserve,run,spool,tmp,yp} /tmp/tmproot/var/
+mount --make-rprivate / # necessary for pivot_root to work
+pivot_root /tmp/tmproot /tmp/tmproot/oldroot
+for i in dev proc sys run; do mount --move /oldroot/$i /$i; done
+systemctl restart sshd
+systemctl status sshd
   
 echo "Create a 20GB, or larger, NTFS partition on the hard drive for the Windows Installation."
 #echo "Open Disks, (Gnome-Disks), and note Device, (/dev/sdx), and UUID of the Windows ISO extract partition."
