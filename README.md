@@ -2,4 +2,4 @@
 Automatic instalations for Linux.
 Run any script by:
 
-source <(curl -s https://github.com/irinelko/LinuxScripts/blob/main/Win10)
+bash <(curl -s https://raw.githubusercontent.com/irinelko/LinuxScripts/main/Win10.sh)
