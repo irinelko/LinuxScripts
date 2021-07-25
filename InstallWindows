@@ -16,7 +16,7 @@ sudo cp -ax /usr/{bin,sbin,lib,lib64} /tmp/tmproot/usr/
 sudo cp -ax /var/{account,empty,lib,local,lock,nis,opt,preserve,run,spool,tmp,yp} /tmp/tmproot/var/
 sudo mount --make-rprivate / # necessary for pivot_root to work
 sudo pivot_root /tmp/tmproot /tmp/tmproot/oldroot
-sudo for i in dev proc sys run; do mount --move /oldroot/$i /$i; done
+for i in dev proc sys run; do sudo mount --move /oldroot/$i /$i; done
 sudo systemctl restart sshd
 sudo systemctl status sshd
   
