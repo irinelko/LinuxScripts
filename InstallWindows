@@ -4,29 +4,21 @@ echo "This step by step has been created from information provided by the OP, @M
 echo "Backup the Target drive."
 
 echo "Create a 6GB NTFS partition on the hard drive and extract the Windows ISO to it."
-# to create the partitions programatically (rather than manually)
-# we're going to simulate the manual input to fdisk
-# The sed script strips off all the comments so that we can 
-# document what we're doing in-line with the actual commands
-# Note that a blank line (commented as "defualt" will send a empty
-# line terminated with a newline to take the fdisk default.
-sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk ${TGTDEV}
-  o # clear the in memory partition table
-  n # new partition
-  p # primary partition
-  1 # partition number 1
-    # default - start at beginning of disk 
-  +100M # 100 MB boot parttion
-  n # new partition
-  p # primary partition
-  2 # partion number 2
-    # default, start immediately after preceding partition
-    # default, extend partition to end of disk
-  a # make a partition bootable
-  1 # bootable partition is partition 1 -- /dev/sda1
-  p # print the in-memory partition table
-  w # write the partition table
-  q # and we're done
+# tMake room for Windows partition.
+systemctl stop httpd
+systemctl stop nfs-server
+umount -a
+mkdir /tmp/tmproot
+mount -t tmpfs none /tmp/tmproot
+mkdir /tmp/tmproot/{proc,sys,dev,run,usr,var,tmp,oldroot}
+cp -ax /{bin,etc,mnt,sbin,lib,lib64} /tmp/tmproot/
+cp -ax /usr/{bin,sbin,lib,lib64} /tmp/tmproot/usr/
+cp -ax /var/{account,empty,lib,local,lock,nis,opt,preserve,run,spool,tmp,yp} /tmp/tmproot/var/
+mount --make-rprivate / # necessary for pivot_root to work
+pivot_root /tmp/tmproot /tmp/tmproot/oldroot
+for i in dev proc sys run; do mount --move /oldroot/$i /$i; done
+systemctl restart sshd
+systemctl status sshd
   
 echo "Create a 20GB, or larger, NTFS partition on the hard drive for the Windows Installation."
 #echo "Open Disks, (Gnome-Disks), and note Device, (/dev/sdx), and UUID of the Windows ISO extract partition."
