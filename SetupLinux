@@ -1,3 +1,4 @@
+#!/bin/bash
 # Install Zorin OS 
 # SellerCrowd localhost will only work for primary user on operating system ID=1000
 
@@ -35,16 +36,23 @@ sudo -- bash -c 'echo "fs.inotify.max_user_watches = 65536" >>  /etc/sysctl.conf
 # or use: echo fs.inotify.max_user_watches=65536 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 sudo sysctl -p
 cat /proc/sys/fs/inotify/max_user_watches
-change VSC setting: "python.formatting.provider": "black"
-change VSC setting: "editor.formatOnSave": true
-" add to settings.json in .vscode folder
-""cucumberautocomplete.formatConfOverride"": {
-    ""And"": 3,
-    ""But"": ""relative"",
-},"
 
-
-
+cat <<EOF >~/Documents/SellerCrowd/cohoot/.vscode/settings.json
+{
+    "cucumberautocomplete.steps": [
+        "front/e2e/cypress/integration/**/*.ts",
+        "node_modules/qa-lib/src/step_definitions/*.js"
+    ],
+    "cucumberautocomplete.strictGherkinCompletion": true,
+    "files.insertFinalNewline": true,
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "cucumberautocomplete.formatConfOverride": {
+        "And": 3,
+        "But": "relative",
+    }
+}
+EOF
 
 # Docker
 curl -fsSL https:#get.docker.com -o get-docker.sh
