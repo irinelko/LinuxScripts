@@ -1,0 +1,116 @@
+# Install Zorin OS 
+# SellerCrowd localhost will only work for primary user on operating system ID=1000
+
+# RDP
+sudo apt-get -y install xrdp
+sudo ufw allow 3389/tcp
+sudo nano /etc/polkit-1/localauthority.conf.d/02-allow-colord.conf
+# and input inside it:
+polkit.addRule(function(action, subject) {
+if ((action.id == “org.freedesktop.color-manager.create-device” || action.id == “org.freedesktop.color-manager.create-profile” || action.id == “org.freedesktop.color-manager.delete-device” || action.id == “org.freedesktop.color-manager.delete-profile” || action.id == “org.freedesktop.color-manager.modify-device” || action.id == “org.freedesktop.color-manager.modify-profile”) && subject.isInGroup(“{group}”))
+{
+return polkit.Result.YES;
+}
+});
+sudo /etc/init.d/xrdp restart
+
+# Fix for xRDP and Ubuntu 18.04.2
+sudo apt-get install xorgxrdp-hwe-18.04
+
+# Node.JS
+sudo apt update && sudo apt install --assume-yes curl
+curl --silent --location https:#deb.nodesource.com/setup_16.x  | sudo bash -
+sudo apt-get install -y nodejs
+
+# Cypress.io
+cd Documents/SellerCrowd/cohoot/
+npm install cypress --save-dev
+
+# Yarn
+sudo npm install --global yarn
+
+# VS Code
+sudo snap install --classic code # or code-insiders
+sudo -- bash -c 'echo "fs.inotify.max_user_watches = 65536" >>  /etc/sysctl.conf
+# or use: echo fs.inotify.max_user_watches=65536 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+sudo sysctl -p
+cat /proc/sys/fs/inotify/max_user_watches
+change VSC setting: "python.formatting.provider": "black"
+change VSC setting: "editor.formatOnSave": true
+" add to settings.json in .vscode folder
+""cucumberautocomplete.formatConfOverride"": {
+    ""And"": 3,
+    ""But"": ""relative"",
+},"
+
+
+
+
+# Docker
+curl -fsSL https:#get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo docker run hello-world
+sudo usermod -aG docker irinelko
+newgrp docker
+docker run hello-world
+
+# Docker Compose
+sudo curl -L "https:#github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose version
+
+# Github – upload public key to Github
+ssh-keygen
+sudo apt install git
+cd Documents/SellerCrowd/
+git clone git@github.com:sellercrowd/cohoot.git
+
+# If you need a branch instead of master
+git config --global user.email "irinelko@gmial.com"
+git config --global user.name "irinelko"
+git commit
+git checkout levels-feature-test
+git pull origin levels-feature-test
+git pull
+make dummydata
+
+# Start localhost (RESTART first)
+sudo reboot
+docker swarm init
+sudo apt install make
+sudo apt install python3-django
+cd Documents/SellerCrowd/cohoot/
+"make init.qa start.e2e
+"
+"# In case of an error: 
+Edit back/Makefile and comment line 87
+Run make dummydata again then"
+
+# Enable/Disable autoLogin opion
+sudo nano /etc/gdm3/custom.conf
+
+# Python
+sudo apt update -y
+sudo apt install python3.9
+apt-get install python-apt
+sudo apt install python3-pip
+pip3 install pre-commit==2.7.1
+sudo apt  install pre-commit
+pre-commit install
+pip install --upgrade pre-commit
+pre-commit autoupdate
+export DJANGO_SETTINGS_MODULE=cohoot.settings
+
+# Run tests
+sudo apt-get install chromium-browser
+cd Documents/SellerCrowd/cohoot/front/e2e/
+make bootstrap
+make cypress.open
+
+# Install Slack
+sudo snap install slack --classic
+
+# Image editor
+sudo add-apt-repository ppa:pinta-maintainers/pinta-stable
+sudo apt-get update
+sudo apt-get install pinta
